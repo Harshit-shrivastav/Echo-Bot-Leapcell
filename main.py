@@ -13,9 +13,11 @@ dp.include_router(router)
 
 app = FastAPI(docs_url=None, redoc_url=None)
 
+# ---------- health-check required by Leapcell ----------
 @app.get("/kaithheathcheck")          
-def health():                                 
-    return {"status": "ok"
+def health():
+    return {"status": "ok"}
+
 
 # ---------- 2.  Telegram posts to /  (because WEBHOOK_URL has no path) ----------
 
@@ -34,7 +36,4 @@ async def on_shutdown():
     await bot.delete_webhook(drop_pending_updates=True)
     await bot.session.close()
   
-# ---------- health-check required by Leapcell ----------
-@app.get("/kaithheathcheck")          
-def health():
-    return {"status": "ok"}
+
