@@ -28,11 +28,13 @@ async def telegram(update: dict):
 # ---------- startup / shutdown ----------
 @app.on_event("startup")
 async def on_startup():
+    print("Bot worker STARTED")
     await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
     logging.warning(f"Webhook set to {WEBHOOK_URL}")
 
 @app.on_event("shutdown")
 async def on_shutdown():
+    print("Bot worker STOPPED")
     await bot.delete_webhook(drop_pending_updates=True)
     await bot.session.close()
   
