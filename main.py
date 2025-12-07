@@ -3,6 +3,18 @@ from fastapi import FastAPI
 from aiogram import Bot, Dispatcher
 from bot import router
 from aiogram.types import Update
+import aiohttp 
+
+async def keep_alive():
+    url = f"{WEBHOOK_URL}/kaithheathcheck"
+    while True:
+        await asyncio.sleep(300)
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    logging.info(f"Ping at {datetime.now()}: {resp.status}")
+        except Exception as e:
+            logging.error(f"Keep-alive failed: {e}")
 
 BOT_TOKEN   = os.getenv("BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")          # full https://... (no path)
@@ -14,6 +26,8 @@ dp.include_router(router)
 app = FastAPI(docs_url=None, redoc_url=None)
 
 # ---------- health-check required by Leapcell ----------
+@app.get("/")
+@app.get("/kaithhealthcheck")
 @app.get("/kaithheathcheck")          
 def health():
     return {"status": "ok"}
