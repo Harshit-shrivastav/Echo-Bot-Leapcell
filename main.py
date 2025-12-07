@@ -3,8 +3,11 @@ from fastapi import FastAPI
 from aiogram import Bot, Dispatcher
 from bot import router
 from aiogram.types import Update
+from dotenv import load_dotenv
 
-BOT_TOKEN   = os.getenv("BOT_TOKEN")
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")          # full https://... (no path)
 
 bot = Bot(token=BOT_TOKEN, parse_mode="HTML")
@@ -19,7 +22,6 @@ app = FastAPI(docs_url=None, redoc_url=None)
 @app.get("/kaithheathcheck")          
 def health():
     return {"status": "ok"}
-
 
 # ---------- 2.  Telegram posts to /  (because WEBHOOK_URL has no path) ----------
 
@@ -40,4 +42,3 @@ async def on_shutdown():
     await bot.delete_webhook(drop_pending_updates=True)
     await bot.session.close()
   
-
